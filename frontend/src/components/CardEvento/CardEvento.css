@@ -1,0 +1,83 @@
+.evento {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #55555554;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    width: 98%;
+    margin-left: auto;
+    margin-right: auto;
+    height: 120px;
+}
+
+.informacoes {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.informacoes img {
+    padding: 15px;
+    width: 120px;
+    border-radius: 5px;
+}
+
+.titulo {
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+}
+
+.descricao {
+    color: white;
+}
+
+.infos {
+    margin-left: 10px;
+}
+
+.data-time {
+    display: flex;
+    color: white;
+    margin-top: 5px;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+#participantes {
+    margin-left: 30px;
+    color: white;
+
+}
+
+.acoes {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 25px;
+    cursor: pointer;
+    color: white;
+}
+
+.endereco {
+    font-size: 15px;
+}
+
+.acoes i:hover {
+    color: #555;
+}
+
+.bi-geo-alt {
+    font-size: 25px;
+    cursor: pointer;
+    color: white;
+    margin-left: 40px;
+}
+
+.bi-geo-alt:hover {
+    color: #555;
+}
+

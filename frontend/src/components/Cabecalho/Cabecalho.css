@@ -1,0 +1,49 @@
+.Cabecalho {
+    position: static;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(180deg, #20CE83, #90D7F4);
+    padding: 10px 20px;
+    z-index: 1000;
+}
+
+.Logo {
+    width: 250px;
+}
+
+.buttons button {
+    background: #34c5ff;
+    border: 1px solid white;
+    color: #555;
+    padding: 10px 10px;
+    border-radius: 15px;
+    cursor: pointer;
+    margin-left: 15px;
+    font-size: 20px;
+}
+
+.buttons .cadastrar:hover {
+    background-color: white;
+    color: #00bfa6;
+}
+
+.buttons .cadastrar:focus {
+    outline: none;
+}
+
+.buttons .entrar {
+    border: none;
+    background: none;
+}
+
+.buttons .entrar:hover {
+    text-decoration: underline;
+}
+
+.buttons .entrar:focus {
+    outline: none;
+}

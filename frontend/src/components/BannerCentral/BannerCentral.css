@@ -1,0 +1,73 @@
+.central-banner {
+    display: flex;
+    justify-content: space-between; 
+    align-items: flex-start; 
+    text-align: center;
+    padding: 40px 20px;
+    background: linear-gradient(180deg, #20CE83, #90D7F4 40%);
+    border-radius: 15px;
+    margin: 20px auto;
+    max-width: 900px;
+    height: auto; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 2;
+    margin-top: -210px;
+}
+
+.icons {
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    text-align: center;
+    flex: 1; 
+    max-width: 200px;
+    margin: 0 10px;
+}
+
+.background-icon {
+    width: 120px;
+    height: 120px;
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    border-radius: 50%;
+    margin-bottom: 15px; 
+    flex-shrink: 0; 
+}
+
+#calendario {
+    background: linear-gradient(75deg, #3465cf, #34cabe);
+}
+
+#convite {
+    background: linear-gradient(75deg, #093eec, #F6E62D);
+}
+
+#festim {
+    background: linear-gradient(75deg, #d611c9, #dfd13f);
+}
+
+.icons img {
+    width: 80px;
+    height: auto;
+}
+
+.icons h3 {
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    margin: 5px 0; 
+}
+
+.icons p {
+    font-size: 16px;
+    color: white;
+    margin: 0;
+}
+
+
+.central-banner .icons {
+    align-self: flex-start;
+}
+

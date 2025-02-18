@@ -1,0 +1,38 @@
+.novo-evento {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    margin-top: 15px;
+}
+
+.plus-button {
+    background-color: #20ce83;
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    outline: none;
+}
+
+.plus-button:focus {
+    outline: none;
+}
+
+.plus-button:hover {
+    background-color: #34c5ff;
+}
+
+#button-add {
+    width: 35px;
+}
+
+h2 {
+    color: gray;
+}

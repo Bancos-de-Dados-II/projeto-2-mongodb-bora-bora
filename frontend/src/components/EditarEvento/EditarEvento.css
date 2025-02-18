@@ -1,0 +1,132 @@
+.popup-overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.popup-criar-evento {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90%;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+}
+
+.popup-criar-evento h2 {
+  margin-bottom: 20px;
+}
+
+.popup-criar-evento form label {
+  display: block;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.popup-criar-evento form input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.05);
+  color: black;
+}
+
+.buttons-create button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 15px 5px;
+}
+
+.popup-criar-evento button[type="submit"] {
+  background-color: #28a745;
+  color: white;
+}
+
+.popup-criar-evento button[type="button"] {
+  background-color: #dc3545;
+  color: white;
+}
+
+.pesquisar {
+  margin-top: -10px;
+  margin-bottom: 10px;
+}
+
+::placeholder {
+  color: gray;
+}
+
+@media (max-width: 768px) {
+  .popup-criar-evento {
+    padding: 15px;
+  }
+
+  .popup-criar-evento form input {
+    font-size: 14px;
+  }
+
+  .buttons-create button {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .popup-criar-evento {
+    padding: 10px;
+    width: 95%;
+  }
+
+  .popup-criar-evento form label {
+    font-size: 14px;
+  }
+}
+
+.popup-criar-evento::-webkit-scrollbar {
+  width: 8px;
+}
+
+.popup-criar-evento::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 10px;
+  border: 2px solid white;
+}
+
+.popup-criar-evento::-webkit-scrollbar-thumb:hover {
+  background-color: #999;
+}
+
+.popup-criar-evento::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+  border-radius: 10px;
+}
+
+.popup-criar-evento input[type="time"],
+.popup-criar-evento input[type="date"] {
+  color: black; /* Cor do texto */
+  background-color: rgba(0, 0, 0, 0.05); /* Fundo */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 8px;
+}
+
+.popup-criar-evento input[type="time"]::-webkit-calendar-picker-indicator,
+.popup-criar-evento input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1); /* Inverte as cores para branco */
+  cursor: pointer; /* Mostra o cursor como ponteiro */
+}
+

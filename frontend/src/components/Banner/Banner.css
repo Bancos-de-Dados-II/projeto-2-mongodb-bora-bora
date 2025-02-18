@@ -1,0 +1,56 @@
+.Banner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: url(https://images.tcdn.com.br/img/img_prod/845696/tinta_em_po_holly_party_100g_rostinho_pintado_1998_3_8bdb6353bf2cb841c72ff03e2a97d171.jpg);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    text-align: center;
+}
+
+.banner-transparente {
+    background-color: rgba(255, 255, 255, 0.514);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    max-width: 500px;
+    width: 450px;
+    height: 400px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+#logo-banner {
+    width: 350px;
+    position: relative;
+    top: -100px;
+}
+
+#texto-banner {
+    color: white;
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: -60px;
+}
+
+.criar-evento {
+    background: #34c5ff;
+    border: 1px solid white;
+    color: white;
+    height: 50px;
+    width: 150px;
+    padding: 10px 10px;
+    border-radius: 15px;
+    cursor: pointer;
+    
+    font-size: 20px;
+    margin-top: 30px;
+}
+
+.criar-evento:hover {
+    background-color: white;
+    color: #00bfa6;
+}
