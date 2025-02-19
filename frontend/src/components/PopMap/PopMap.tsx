@@ -33,7 +33,7 @@ const PopMap: React.FC<Map> = ({isOpen, onClose, id}) => {
             <section className="PopMap">
                 <div className="PopUP">
                     <p>Local do evento</p>
-                    <MyMap coordinates={coordenadas}/>
+                    <MyMap coordinates={[coordenadas[1],coordenadas[0]]}/>
                 </div>
             </section>
         </ReactModal>

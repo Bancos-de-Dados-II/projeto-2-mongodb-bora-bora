@@ -7,7 +7,6 @@ interface MyMapProps {
 }
 
 const MyMap: React.FC<MyMapProps> = ({ coordinates }) => {
-  console.log(coordinates);
   
   const defaultPosition: [number, number] = [51.505, -0.09];
 
