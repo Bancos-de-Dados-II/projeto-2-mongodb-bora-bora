@@ -2,7 +2,7 @@ import { Event } from "../types/Event";
 
 
 export interface IEventRepository{
-    findById(id:string):Promise<Event | null>
+    findById(id:string):Promise<any>
     findAll():Promise<Event[]>
     deleteEvent(id:string):Promise<void>
     createEvent(event:Event):Promise<unknown>

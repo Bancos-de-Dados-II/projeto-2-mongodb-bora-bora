@@ -3,6 +3,8 @@ import ReactModal from "react-modal";
 import './CriarEvento.css';
 import api from "../../services/api";
 import MyMap from "../Map/Map";
+import {  ToastContainer ,  toast  }  from  'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 interface CriarEventoProps {
     isOpen: boolean;
@@ -23,19 +25,25 @@ const CriarEvento: React.FC<CriarEventoProps> = ({isOpen, onClose}) => {
     const [coordinates, setCoordinates] = useState<[number, number] | null>(null);
 
     async function search(pesquisa: string) {
-        try {
-            const url = await fetch(`https://nominatim.openstreetmap.org/search?q=${pesquisa}&format=json`);
-            const data = await url.json();
-            if (data.length > 0) {
-                const { lat, lon } = data[0];
-                setCoordinates([parseFloat(lat), parseFloat(lon)]);
-            } else {
-                alert("Nenhum resultado encontrado para o endereço.");
+            try {
+    
+                if(pesquisa.length === 0){
+                    throw Error("O campo precisa ser preenchido com alguma localização!");
+                }
+    
+                const url = await fetch(`https://nominatim.openstreetmap.org/search?q=${pesquisa}&format=json`);
+                const data = await url.json();
+                if (data.length > 0) {
+                    const { lat, lon } = data[0];
+                    setCoordinates([parseFloat(lat), parseFloat(lon)]);
+                } 
+                else {
+                    throw Error("Nenhum resultado encontrado para o endereço.");
+                }
+                } catch (error:any) {
+                toast.error(error.message);    
             }
-        } catch (error) {
-            console.error("Erro ao buscar coordenadas:", error);
         }
-    }
 
     const submit = (e: React.FormEvent) => {
 
@@ -61,19 +69,76 @@ const CriarEvento: React.FC<CriarEventoProps> = ({isOpen, onClose}) => {
 
     async function createEventos (){
         
-        await api.post('/event', {
-            imagem: "",
-            title: inputNome.current.value,
-            description: inputDescricao.current.value,
-            horario: inputHorario.current.value,
-            data: inputData.current.value,
-            quantPart: parseInt(inputParticipantes.current.value),
-            endereco: inputEndereco.current.value,
-            geolocalization: {
-                "type":"Point",
-                "coordinates":[coordinates[1], coordinates[0]]
+        try {
+            if(!coordinates){
+                throw Error("O endereço deve ser informado!");
             }
-        })
+
+            if(!inputNome.current.value){
+                throw Error("O titulo deve ser informado!");
+            }
+            if(!inputDescricao.current.value){
+                throw Error("O evento deve ter uma descrição!");
+            }
+            
+            if(!inputHorario.current.value){
+                throw Error("O horario deve ser informado!");
+            }
+
+            
+            if(!inputData.current.value){
+                throw Error("A data do evento deve ser informada!");
+            }
+            
+            if(!inputParticipantes.current.value ){
+                throw Error("A quantidade de participantes deve ser informada!");
+            }
+            if(inputParticipantes.current.value === "0" ){
+                throw Error("A quantidade de participantes deve maior que 0!");
+            }
+
+            if(inputParticipantes.current.value < "0" ){
+                throw Error("A quantidade de participantes deve um número inteiro positivo!");
+            }
+            
+            
+            console.log({
+
+                titulo:inputNome.current.value,
+                descricao:inputDescricao.current.value,
+                horario:inputHorario.current.value,
+               data: inputData.current.value,
+               coordenadas:coordinates,
+               participantes:inputParticipantes.current.value
+            
+            });
+            
+            
+
+
+            await api.post('/event', {
+                imagem: "",
+                title: inputNome.current.value,
+                description: inputDescricao.current.value,
+                horario: inputHorario.current.value,
+                data: inputData.current.value,
+                quantPart: parseInt(inputParticipantes.current.value),
+                endereco: inputEndereco.current.value,
+                geolocalization: {
+                    "type":"Point",
+                    "coordinates":[coordinates[1], coordinates[0]]
+                }
+            })
+
+            toast.success("Evento criado com sucesso!");
+            
+        } catch (error:any) {
+            console.log(error);
+            
+            toast.error(error.message);
+        }
+
+        
     }
 
     return (
@@ -120,6 +185,7 @@ const CriarEvento: React.FC<CriarEventoProps> = ({isOpen, onClose}) => {
                     <button type="button" onClick={onClose}>Cancelar</button>
                 </div>
             </form>
+            <ToastContainer />
         </ReactModal>
     );
 

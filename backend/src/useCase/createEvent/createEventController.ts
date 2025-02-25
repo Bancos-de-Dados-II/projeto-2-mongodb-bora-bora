@@ -8,10 +8,10 @@ export class CreateEventController{
 
     async handle(request:Request,response:Response){
         try {
+
             createEventDTO.parse(request.body);
 
-            const data:z.infer<typeof createEventDTO> = request.body;
-
+            const data:z.infer<typeof createEventDTO> = request.body;        
             const eventCreated = await this.createEventUseCase.execute({...data});
 
             response.status(200).json(data);
@@ -19,7 +19,8 @@ export class CreateEventController{
             
 
         } catch (error:any) {
-            response.status(400).json({message:error.message});
+            
+            response.status(400).json({error:error.message});
             return;
         }
     }

@@ -3,6 +3,8 @@ import './CardEvento.css';
 import api from '../../services/api';
 import PopMap from '../PopMap/PopMap';
 import EditarEvento from '../EditarEvento/EditarEvento';
+import {  ToastContainer ,  toast  }  from  'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 interface CardEventoProps {
     // imagem: string;
@@ -81,6 +83,7 @@ const CardEvento: React.FC<CardEventoProps> = ({id}) => {
                         window.location.reload()
                     }}></i>
                 </div>
+                <ToastContainer/>
             </div>
         );  
     };

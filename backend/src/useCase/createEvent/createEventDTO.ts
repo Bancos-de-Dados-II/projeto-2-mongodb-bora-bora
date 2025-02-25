@@ -7,12 +7,12 @@ export const createEventDTO = z.object({
         }
     ).min(2).max(255).refine(data => !!data, { message: 'The title is mandatory' }),
 
-    description:z.string({invalid_type_error:"Description must be a string"}).optional(),
+    description:z.string({invalid_type_error:"Description must be a string"}).refine(data => !!data, { message: 'The description is mandatory' }),
 
     quantPart:z.number({
         required_error:"Quantidade de participantes is required",
         invalid_type_error:"Quantidade de participantes must be a number"
-    }).int().refine(data => !!data, { message: 'The quantidade de participantes is mandatory' }),
+    }).int("A quantidade de participantes deve ser um numero inteiro").refine(data => !!data, { message: 'The quantidade de participantes is mandatory' }),
 
     data:z.string({
         required_error:"Data is required",
@@ -25,7 +25,7 @@ export const createEventDTO = z.object({
 
     horario:z.string({
         invalid_type_error:"Horario must be a string"
-    }).optional(),
+    }).refine(data => !!data, { message: 'The Hour is mandatory' }),
 
     geolocalization:z.object({type: z.string(), coordinates: z.array(z.number())}),
 

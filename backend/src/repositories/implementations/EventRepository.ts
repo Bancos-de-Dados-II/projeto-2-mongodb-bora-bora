@@ -4,7 +4,7 @@ import Evento from "../../database/model/Event";
 
 export class EventRepository implements IEventRepository{
 
-    async findById(id: string): Promise<Event | null> {
+    async findById(id: string): Promise<any> {
         let result = await Evento.findById(id);
         let event= {
             id:result!._id,

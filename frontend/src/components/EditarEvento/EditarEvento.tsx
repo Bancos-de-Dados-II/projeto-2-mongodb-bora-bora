@@ -1,5 +1,7 @@
 import React, {useState, useRef, useEffect} from "react";
 import ReactModal from "react-modal";
+import {  ToastContainer ,  toast  }  from  'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 import './EditarEvento.css';
 import api from "../../services/api";
 import MyMap from "../Map/Map";
@@ -38,7 +40,6 @@ const EditarEvento: React.FC<EditarEventoProps> = ({isOpen, onClose, id}) => {
                 setHorario(resultado.data.horario);
                 setData(resultado.data.data);
                 setQuantParticipantes(resultado.data.quantPart);
-                console.log(resultado.data.geolocalization.coordinates);
                 setCoordinates([resultado.data.geolocalization.coordinates[1],resultado.data.geolocalization.coordinates[0]]);
             } catch (error) {
                 console.log(error);
@@ -49,9 +50,6 @@ const EditarEvento: React.FC<EditarEventoProps> = ({isOpen, onClose, id}) => {
         
     },[])
    
-    
-    console.log("evento",evento.title);
-    
     
     //Gambiarra null!
     const inputNome = useRef<HTMLInputElement>(null!);
@@ -65,16 +63,22 @@ const EditarEvento: React.FC<EditarEventoProps> = ({isOpen, onClose, id}) => {
 
     async function search(pesquisa: string) {
         try {
+
+            if(pesquisa.length === 0){
+                throw Error("O campo precisa ser preenchido com alguma localização!");
+            }
+
             const url = await fetch(`https://nominatim.openstreetmap.org/search?q=${pesquisa}&format=json`);
             const data = await url.json();
             if (data.length > 0) {
                 const { lat, lon } = data[0];
                 setCoordinates([parseFloat(lat), parseFloat(lon)]);
-            } else {
-                alert("Nenhum resultado encontrado para o endereço.");
+            } 
+            else {
+                throw Error("Nenhum resultado encontrado para o endereço.");
             }
-        } catch (error) {
-            console.error("Erro ao buscar coordenadas:", error);
+            } catch (error:any) {
+            toast.error(error.message);    
         }
     }
 
@@ -100,19 +104,29 @@ const EditarEvento: React.FC<EditarEventoProps> = ({isOpen, onClose, id}) => {
     };
 
     async function putEvento (){
-        await api.put(`/event/${id}`, {
-            imagem: "",
-            title: inputNome.current.value,
-            description: inputDescricao.current.value,
-            horario: inputHorario.current.value,
-            data: inputData.current.value,
-            quantPart:parseInt(inputParticipantes.current.value),
-            endereco: inputEndereco.current.value,
-            geolocalization: {
-                "type":"Point",
-                "coordinates":[coordinates[1], coordinates[0]]
-            }
-    })
+
+        try {
+            
+            await api.put(`/event/${id}`, {
+                imagem: "",
+                title: inputNome.current.value,
+                description: inputDescricao.current.value,
+                horario: inputHorario.current.value,
+                data: inputData.current.value,
+                quantPart:parseInt(inputParticipantes.current.value),
+                endereco: inputEndereco.current.value,
+                geolocalization: {
+                    "type":"Point",
+                    "coordinates":[coordinates[1], coordinates[0]]
+                }
+                
+        })
+        } catch (error) {
+            console.log("entrou no catch");
+            
+            toast.error(error.message);
+        }
+
 }
 
 
@@ -162,6 +176,7 @@ const EditarEvento: React.FC<EditarEventoProps> = ({isOpen, onClose, id}) => {
                         <button type="button" onClick={onClose}>Cancelar</button>
                     </div>
                 </form>
+                <ToastContainer />
             </ReactModal>
         );
 };
