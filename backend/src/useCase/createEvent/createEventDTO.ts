@@ -7,7 +7,7 @@ export const createEventDTO = z.object({
         }
     ).min(2).max(255).refine(data => !!data, { message: 'The title is mandatory' }),
 
-    description:z.string({invalid_type_error:"Description must be a string"}).refine(data => !!data, { message: 'The description is mandatory' }),
+    description:z.string({invalid_type_error:"Description must be a string"}).optional(),
 
     quantPart:z.number({
         required_error:"Quantidade de participantes is required",
