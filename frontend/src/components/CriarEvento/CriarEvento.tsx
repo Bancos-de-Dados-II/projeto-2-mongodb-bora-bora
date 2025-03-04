@@ -1,4 +1,4 @@
-import React, {useState, useRef} from "react";
+import React, {useState, useEffect} from "react";
 import ReactModal from "react-modal";
 import './CriarEvento.css';
 import api from "../../services/api";
@@ -21,7 +21,7 @@ const createEventoFormSchema = z.object({
         required_error:"Title é obrigatório",
         invalid_type_error:"Title deve ser uma string"
     }
-).min(4,"O endereco deve conter no mínimo 4 caracteres").max(255,"O endereco deve conter no máximo 255 caracteres"),
+).min(4,"O evento deve conter um nome de no mínimo 4 caracteres").max(255,"O endereco deve conter no máximo 255 caracteres"),
 
     descricao:z.string({invalid_type_error:"A descrição deve ser uma string"}).optional(),
 
@@ -33,12 +33,12 @@ const createEventoFormSchema = z.object({
     data:z.string({
         required_error:"Data é obrigatória",
         invalid_type_error:"Data deve ser uma string"
-    }),
+    }).refine(data => !!data, { message: 'A data é um dado obrigatório' }),
 
     horario:z.string({
         required_error:"O horário é obrigatório",
         invalid_type_error:"Horario deve ser uma string"
-    }),
+    }).refine(data => !!data, { message: 'O horário é um dado obrigatório' }),
 
     endereco:z.string({
         required_error:"Endereco é obrigatório",
@@ -50,7 +50,7 @@ type CreateEventFormData = z.infer<typeof createEventoFormSchema>;
 
 const CriarEvento: React.FC<CriarEventoProps> = ({isOpen, onClose}) => {
 
-    const {register , handleSubmit, formState:{errors}} = useForm<CreateEventFormData>({
+    const {register , handleSubmit,reset ,formState:{errors}} = useForm<CreateEventFormData>({
         resolver:zodResolver(createEventoFormSchema)
     });
 
@@ -70,16 +70,20 @@ const CriarEvento: React.FC<CriarEventoProps> = ({isOpen, onClose}) => {
 
     async function search() {
             try {
-    
+                console.log(endereco);
+                
+
                 if(endereco.length === 0){
                     throw Error("O campo precisa ser preenchido com alguma localização!");
                 }
-    
+                
+                
                 const url = await fetch(`https://nominatim.openstreetmap.org/search?q=${endereco}&format=json`);
                 const data = await url.json();
                 if (data.length > 0) {
                     const { lat, lon } = data[0];
                     setCoordinates([parseFloat(lat), parseFloat(lon)]);
+                    setEndereco("");
                 } 
                 else {
                     throw Error("Nenhum resultado encontrado para o endereço.");
@@ -112,7 +116,12 @@ const CriarEvento: React.FC<CriarEventoProps> = ({isOpen, onClose}) => {
     // };
 
     async function onSubmit(data:any){
-        try {
+        try {    
+
+           if(!coordinates){
+            throw Error("Você deve pesquisar a localização para marcar o local do evento!");
+           }
+
             const createEvento =  await api.post('/event', {
                 imagem: "",
                 title: data.titulo,
@@ -127,13 +136,12 @@ const CriarEvento: React.FC<CriarEventoProps> = ({isOpen, onClose}) => {
                 }
             })
 
-            console.log("aqui");
-            
-            console.log(createEvento);
-            
+            onClose();
+            reset()
+            // window.location.reload()
+              
         } catch (error:any) {
-            console.log(error.data.error);
-
+            toast.error(error.message);
         }
     }
 
@@ -168,20 +176,20 @@ const CriarEvento: React.FC<CriarEventoProps> = ({isOpen, onClose}) => {
         
     // }
 
-    return (
-        <ReactModal isOpen={isOpen} onRequestClose={onClose} className="popup-criar-evento" overlayClassName="popup-overlay">
-            <h2>Criar Evento</h2>
-            <form onSubmit={()=>{handleSubmit(onSubmit)}}>
-                <div>
-                    <MyMap coordinates={coordinates}/>
-                </div>
+    // useEffect(() => {
+    //     if (!isOpen) {
+    //         console.log("trocou aqui");
+            
+    //       reset(); // Limpa os campos quando o modal for fechado
+    //     }
+    //   }, [isOpen, reset]);
 
-                <label style={{display:"flex", flexDirection:"column"}}>
-                    Onde será seu evento?
-                    <input type="text" value={endereco} {...register('endereco')}   onChange={(e)=>setEndereco(e.target.value)}/>
-                    {errors.endereco && <span style={{color:"red"}}>{errors.endereco.message}</span>}
-                    <button className="pesquisar" onClick={() => search(endereco)}>Pesquisar</button>
-                </label>
+    return (
+        <ReactModal isOpen={isOpen} onRequestClose={onClose} shouldCloseOnOverlayClick={false} className="popup-criar-evento" overlayClassName="popup-overlay">
+            <h2>Criar Evento</h2>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                
+
                 <br />
                 <label>
                     Como vai se chamar seu evento?
@@ -191,32 +199,50 @@ const CriarEvento: React.FC<CriarEventoProps> = ({isOpen, onClose}) => {
 
                 <label>
                     Descreva seu evento
-                    <input  type="text"  {...register('descricao')}/>
+                    <input  type="text" {...register('descricao')}/>
                     {errors.descricao && <span style={{color:"red"}}>{errors.descricao.message}</span>}
                 </label>
 
                 <label>
                     Que horas seu evento começa?
-                    <input type="time"  {...register('horario')}/>
+                    <input type="time"   {...register('horario')}/>
                     {errors.horario && <span style={{color:"red"}}>{errors.horario.message}</span>}
                 </label>
 
                 <label>
                     Quando será seu evento?
-                    <input type="date"   {...register('data')}/>
+                    <input type="date" {...register('data')}/>
                     {errors.data && <span style={{color:"red"}}>{errors.data.message}</span>}
                 </label>
 
                 <label>
                     Quantas pessoas serão convidadas ?
-                    <input type="number"  {...register('quantParticipantes')}/>
+                    <input type="number"   {...register('quantParticipantes')}/>
                     {errors.quantParticipantes && <span style={{color:"red"}}>{errors.quantParticipantes.message}</span>}
                 </label>
 
-                <div className="buttons-create">
-                    <button type="submit" onClick={()=>{if(!errors) onClose()}}>Criar</button>
-                    <button type="button" onClick={onClose}>Cancelar</button>
+
+                <div>
+                    <MyMap coordinates={coordinates}/>
                 </div>
+                
+                <label style={{display:"flex", flexDirection:"column"}}>
+                    Onde será seu evento?
+                    <input type="text"  {...register('endereco')} onChange={(e)=>{setEndereco(e.target.value)}}/>
+                    {errors.endereco && <span style={{color:"red"}}>{errors.endereco.message}</span>}
+                    <button type="button" className="pesquisar" onClick={search}>Pesquisar</button>
+                </label>
+
+
+                <div className="buttons-create">
+                    <button type="submit">Criar</button>
+                    <button type="button" onClick={()=>{
+                        setCoordinates(null);
+                        reset();
+                        onClose();
+                        }}>Cancelar</button>
+                </div>
+
             </form>
             <ToastContainer />
         </ReactModal>

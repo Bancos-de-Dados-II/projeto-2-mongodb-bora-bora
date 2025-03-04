@@ -21,16 +21,20 @@ const Menu: React.FC = () => {
     const [selecionada, selecionar] = useState<string>("Meus Eventos");
     const [popupCriarOpen, setPopupCriarOpen] = useState(false);
     const [eventos, setEventos] = useState<Evento[]>([]);
-    // const [page,setPage] = useState(1);
+    const [update,setUpdate] = useState(0);
+    
+    const triggerUpdate = () => {
+        setUpdate((prev) => prev + 1);
+      };
 
     const fetchEventos = async () => {
-        const response = await api.get<Evento[]>("/event");    
+        const response = await api.get<Evento[]>("/event"); 
         setEventos(response.data);
     }
 
     useEffect(() => {
         fetchEventos();
-    }, []);
+    }, [update]);
 
     return (
         <div className="container-background">
@@ -52,7 +56,10 @@ const Menu: React.FC = () => {
                     <Botao onClick={() => setPopupCriarOpen(true)}/>
                     <CriarEvento
                     isOpen={popupCriarOpen}
-                    onClose={() => setPopupCriarOpen(false)}
+                    onClose={() => {
+                        setPopupCriarOpen(false)
+                        triggerUpdate();
+                    }}
                     />
                 </div>
             )}
