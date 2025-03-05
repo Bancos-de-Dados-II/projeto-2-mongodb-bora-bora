@@ -30,11 +30,13 @@ const updateEventoFormSchema = z.object({
         invalid_type_error:"Quantidade de participantes deve ser um numero"
     }).int("A quantidade de participantes deve ser um numero inteiro").min(1,"O evento deve ter pelo menos um participante"),
 
-    data:z.string({
-        required_error:"Data é obrigatória",
-        invalid_type_error:"Data deve ser uma string"
-    }).min(1,"A informe ao menos uma data").refine(data =>{return data.localeCompare},{message:"Informe uma data válida"}
-    ),
+    data:z.coerce.date().refine((data)=>{
+        console.log("refine");
+        
+        console.log(data.getTime());
+        console.log(new Date().getTime());
+        
+        return data > new Date()},{message:`Data inválida`}),
 
     horario:z.string({
         required_error:"O horário é obrigatório",
@@ -49,24 +51,13 @@ const updateEventoFormSchema = z.object({
 
 type UpdateEventFormData = z.infer<typeof updateEventoFormSchema>;
 
-function verificaData(data){
-
-    const dataAtual = new Date().getTime();
-    const dataEventoFormatada=  new Date(data).getTime();
-    
-    
-    if(dataEventoFormatada < dataAtual){     
-        return false;
-    }
-    return true;
-}
 
 
 
 
 const EditarEvento: React.FC<EditarEventoProps> = ({isOpen, onClose, id}) => {
 
-     const {register , handleSubmit,reset,formState:{errors}} = useForm<UpdateEventFormData>({
+     const {register , handleSubmit,formState:{errors}} = useForm<UpdateEventFormData>({
             resolver:zodResolver(updateEventoFormSchema)
         });
 
@@ -87,13 +78,18 @@ const EditarEvento: React.FC<EditarEventoProps> = ({isOpen, onClose, id}) => {
     useEffect(()=>{
         async function getEvento() {
             try {
+                
                 const resultado =   await api.get(`/event/${id}`);
                 setEvento(resultado.data);
                 setEndereco(resultado.data.endereco);
                 setDescription(resultado.data.description); 
                 setTitle(resultado.data.title);
                 setHorario(resultado.data.horario);
-                setData(resultado.data.data);
+                const dataStr = new Date(resultado.data.data).toLocaleDateString("pt-BR", { timeZone: "UTC" }); // Formato dd/MM/yyyy
+                const [dia, mes, ano] = dataStr.split("/");
+                const data = new Date(ano, mes - 1, dia); // Mês começa do zero
+                const dataFormatada = data.toISOString().split("T")[0];
+                setData(dataFormatada);
                 setQuantParticipantes(resultado.data.quantPart);
                 setCoordinates([resultado.data.geolocalization.coordinates[1],resultado.data.geolocalization.coordinates[0]]);
             } catch (error) {
@@ -226,8 +222,11 @@ const EditarEvento: React.FC<EditarEventoProps> = ({isOpen, onClose, id}) => {
 
 // }
 
+    console.log("valor de data");
+    
+    console.log(data);
 
-
+    
 
         return (
             <ReactModal isOpen={isOpen} onRequestClose={onClose} className="popup-criar-evento" overlayClassName="popup-overlay">
@@ -256,7 +255,6 @@ const EditarEvento: React.FC<EditarEventoProps> = ({isOpen, onClose, id}) => {
                     <label>
                         Quando será seu evento?
                         <input type="date" {...register('data')}  value={data} onChange={(e)=>setData(e.target.value)}/>
-                        {verificaData(data) === false  && <span style={{color:"red"}}>{"Por favor Selecione uma data válida"}</span>}
                         {errors.data && <span style={{color:"red"}}>{errors.data.message}</span>}
                     </label>
     

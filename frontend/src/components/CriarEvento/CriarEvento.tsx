@@ -14,6 +14,18 @@ interface CriarEventoProps {
     onClose: () => void;
 }
 
+// function verificaData(data){
+
+//     const dataAtual = new Date().getTime();
+//     const dataEventoFormatada=  new Date(data).getTime();
+    
+    
+//     if(dataEventoFormatada < dataAtual){     
+//         return false;
+//     }
+//     return true;
+// }
+
 
 
 const createEventoFormSchema = z.object({
@@ -30,10 +42,7 @@ const createEventoFormSchema = z.object({
         invalid_type_error:"Quantidade de participantes deve ser um numero"
     }).int("A quantidade de participantes deve ser um numero inteiro").min(1,"O evento deve ter pelo menos um participante"),
 
-    data:z.string({
-        required_error:"Data é obrigatória",
-        invalid_type_error:"Data deve ser uma string"
-    }).refine(data => !!data, { message: 'A data é um dado obrigatório' }),
+    data:z.coerce.date().refine((data)=>data > new Date(),{message:"Data inválida"}),
 
     horario:z.string({
         required_error:"O horário é obrigatório",
@@ -98,17 +107,7 @@ const CriarEvento: React.FC<CriarEventoProps> = ({isOpen, onClose}) => {
             }
         }
 
-        function verificaData(data){
-
-            const dataAtual = new Date().getTime();
-            const dataEventoFormatada=  new Date(data).getTime();
-            
-            
-            if(dataEventoFormatada < dataAtual){     
-                return false;
-            }
-            return true;
-        }
+        
 
     // const submit = (e: React.FormEvent) => {
 
@@ -211,32 +210,31 @@ const CriarEvento: React.FC<CriarEventoProps> = ({isOpen, onClose}) => {
                 <br />
                 <label>
                     Como vai se chamar seu evento?
-                    <input type="text"   {...register('titulo')}/>
+                    <input type="text"   {...register('titulo')} value={title} onChange={(e)=>setTitle(e.target.value)}/>
                     {errors.titulo && <span style={{color:"red"}}>{errors.titulo.message}</span>}
                 </label>
 
                 <label>
                     Descreva seu evento
-                    <input  type="text" {...register('descricao')}/>
+                    <input  type="text" {...register('descricao')}  value={description} onChange={(e)=>setDescription(e.target.value)}/>
                     {errors.descricao && <span style={{color:"red"}}>{errors.descricao.message}</span>}
                 </label>
 
                 <label>
                     Que horas seu evento começa?
-                    <input type="time"   {...register('horario')}/>
+                    <input type="time"   {...register('horario')} value={horario} onChange={(e)=>setHorario(e.target.value)}/>
                     {errors.horario && <span style={{color:"red"}}>{errors.horario.message}</span>}
                 </label>
 
                 <label>
                     Quando será seu evento?
                     <input type="date" {...register('data')} value={data} onChange={(e)=>setData(e.target.value)}/>
-                    {verificaData(data) === false  && <span style={{color:"red"}}>{"Por favor Selecione uma data válida"}</span>}
                     {errors.data && <span style={{color:"red"}}>{errors.data.message}</span>}
                 </label>
 
                 <label>
                     Quantas pessoas serão convidadas ?
-                    <input type="number"   {...register('quantParticipantes')}/>
+                    <input type="number"   {...register('quantParticipantes')}  value={quantParticipantes} onChange={(e)=>setQuantParticipantes(e.target.value)}/>
                     {errors.quantParticipantes && <span style={{color:"red"}}>{errors.quantParticipantes.message}</span>}
                 </label>
 
