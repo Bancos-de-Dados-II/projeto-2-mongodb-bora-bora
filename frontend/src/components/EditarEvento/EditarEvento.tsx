@@ -33,13 +33,14 @@ const updateEventoFormSchema = z.object({
     data:z.string({
         required_error:"Data é obrigatória",
         invalid_type_error:"Data deve ser uma string"
-    }).refine(data => !!data, { message: 'A data é um dado obrigatório' }),
+    }).min(1,"A informe ao menos uma data").refine(data =>{return data.localeCompare},{message:"Informe uma data válida"}
+    ),
 
     horario:z.string({
         required_error:"O horário é obrigatório",
         invalid_type_error:"Horario deve ser uma string"
-    }).refine(data => !!data, { message: 'O horário é um dado obrigatório' }),
-
+    }).refine(data =>!!data, {message:"O horario é um dado obrigatório"}),
+    
     endereco:z.string({
         required_error:"Endereco é obrigatório",
         invalid_type_error:"Endereco deve ser uma string"
@@ -47,6 +48,19 @@ const updateEventoFormSchema = z.object({
     })
 
 type UpdateEventFormData = z.infer<typeof updateEventoFormSchema>;
+
+function verificaData(data){
+
+    const dataAtual = new Date().getTime();
+    const dataEventoFormatada=  new Date(data).getTime();
+    
+    
+    if(dataEventoFormatada < dataAtual){     
+        return false;
+    }
+    return true;
+}
+
 
 
 
@@ -68,18 +82,7 @@ const EditarEvento: React.FC<EditarEventoProps> = ({isOpen, onClose, id}) => {
     const [coordinates, setCoordinates] = useState<[number, number] | null>(null!);
 
 
-    function verificaData(){
-
-        const dataAtual = new Date().getTime();
-        const dataEventoFormatada=  new Date(evento.data).getTime();
-        
-        
-        if(dataEventoFormatada < dataAtual){     
-            return false;
-        }
-        return true;
-    }
-
+    
 
     useEffect(()=>{
         async function getEvento() {
@@ -163,11 +166,6 @@ const EditarEvento: React.FC<EditarEventoProps> = ({isOpen, onClose, id}) => {
     async function onSubmit(data:any){
         try {    
 
-            const dataVerifica = verificaData();
-
-            if(!dataVerifica){
-                throw Error("Selecione uma data válida!");
-            }
 
            if(!coordinates){
             throw Error("Você deve pesquisar a localização para marcar o local do evento!");
@@ -258,6 +256,7 @@ const EditarEvento: React.FC<EditarEventoProps> = ({isOpen, onClose, id}) => {
                     <label>
                         Quando será seu evento?
                         <input type="date" {...register('data')}  value={data} onChange={(e)=>setData(e.target.value)}/>
+                        {verificaData(data) === false  && <span style={{color:"red"}}>{"Por favor Selecione uma data válida"}</span>}
                         {errors.data && <span style={{color:"red"}}>{errors.data.message}</span>}
                     </label>
     

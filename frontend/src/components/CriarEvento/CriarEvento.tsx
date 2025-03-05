@@ -54,8 +54,6 @@ const CriarEvento: React.FC<CriarEventoProps> = ({isOpen, onClose}) => {
         resolver:zodResolver(createEventoFormSchema)
     });
 
-    const [endereco, setEndereco] = useState("");
-   
     //Gambiarra null!
     // const inputNome = useRef<HTMLInputElement>(null!);
     // const inputHorario = useRef<HTMLInputElement>(null!);
@@ -64,6 +62,13 @@ const CriarEvento: React.FC<CriarEventoProps> = ({isOpen, onClose}) => {
     // const inputDescricao = useRef<HTMLInputElement>(null!);
     // const inputData = useRef<HTMLInputElement>(null!);
     // const inputEndereco = useRef<HTMLInputElement>(null!)
+    const [endereco, setEndereco] = useState("");
+    const [description, setDescription] = useState("");
+    const [title, setTitle] = useState("");
+    const [horario, setHorario] = useState("");
+    const [data, setData] = useState("");
+    const [quantParticipantes, setQuantParticipantes] = useState("");
+    
 
     const [imagemEvento, setImagemEvento] = useState<File | null>(null);
     const [coordinates, setCoordinates] = useState<[number, number] | null>(null);
@@ -93,10 +98,10 @@ const CriarEvento: React.FC<CriarEventoProps> = ({isOpen, onClose}) => {
             }
         }
 
-        function verificaData(){
+        function verificaData(data){
 
             const dataAtual = new Date().getTime();
-            const dataEventoFormatada=  new Date(evento.data).getTime();
+            const dataEventoFormatada=  new Date(data).getTime();
             
             
             if(dataEventoFormatada < dataAtual){     
@@ -130,13 +135,6 @@ const CriarEvento: React.FC<CriarEventoProps> = ({isOpen, onClose}) => {
     async function onSubmit(data:any){
         try {  
             
-            const dataAtual = new Date().getTime();
-            const dataEventoFormatada=  new Date(data.data).getTime();
-            
-            
-            if(dataEventoFormatada < dataAtual){     
-                throw Error("Selecione uma data válida!");
-            }
 
            if(!coordinates){
             throw Error("Você deve pesquisar a localização para marcar o local do evento!");
@@ -231,7 +229,8 @@ const CriarEvento: React.FC<CriarEventoProps> = ({isOpen, onClose}) => {
 
                 <label>
                     Quando será seu evento?
-                    <input type="date" {...register('data')}/>
+                    <input type="date" {...register('data')} value={data} onChange={(e)=>setData(e.target.value)}/>
+                    {verificaData(data) === false  && <span style={{color:"red"}}>{"Por favor Selecione uma data válida"}</span>}
                     {errors.data && <span style={{color:"red"}}>{errors.data.message}</span>}
                 </label>
 
