@@ -93,6 +93,18 @@ const CriarEvento: React.FC<CriarEventoProps> = ({isOpen, onClose}) => {
             }
         }
 
+        function verificaData(){
+
+            const dataAtual = new Date().getTime();
+            const dataEventoFormatada=  new Date(evento.data).getTime();
+            
+            
+            if(dataEventoFormatada < dataAtual){     
+                return false;
+            }
+            return true;
+        }
+
     // const submit = (e: React.FormEvent) => {
 
     //     const nomeEvento = inputNome.current?.value.trim();
@@ -116,7 +128,15 @@ const CriarEvento: React.FC<CriarEventoProps> = ({isOpen, onClose}) => {
     // };
 
     async function onSubmit(data:any){
-        try {    
+        try {  
+            
+            const dataAtual = new Date().getTime();
+            const dataEventoFormatada=  new Date(data.data).getTime();
+            
+            
+            if(dataEventoFormatada < dataAtual){     
+                throw Error("Selecione uma data válida!");
+            }
 
            if(!coordinates){
             throw Error("Você deve pesquisar a localização para marcar o local do evento!");

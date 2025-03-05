@@ -30,6 +30,8 @@ const formatarData = (dataISO: string) => {
 // imagem, title, description, 
 //     horario, data, quantPart, endereco, geolocalization,
 
+
+
 const CardEvento: React.FC<CardEventoProps> = ({id}) => {  
         
         
@@ -50,6 +52,22 @@ const CardEvento: React.FC<CardEventoProps> = ({id}) => {
         getEvento(id);
     },[])
 
+
+    function verificaData(){
+
+        const dataAtual = new Date().getTime();
+        const dataEventoFormatada=  new Date(evento.data).getTime();
+        
+        
+        if(dataEventoFormatada < dataAtual){     
+            return false;
+        }
+        return true;
+    }
+    
+
+    
+
         return (
             <div className='evento'>
                 <div className='informacoes'>
@@ -69,10 +87,21 @@ const CardEvento: React.FC<CardEventoProps> = ({id}) => {
                 </div>
                 <div className='acoes'>
                     <i className='bi bi-person-fill-add'></i>
-                    <i className='bi bi-pencil-square' onClick={() =>{ setPopupCriarOpen(true)
-                        getEvento(id)
+                    <i className='bi bi-pencil-square' onClick={() =>{ 
+                        
+                        const dataverificada = verificaData();
+                        console.log(dataverificada);
+                        
+                        if(dataverificada){
+                            
+                            setPopupCriarOpen(true)
+                            getEvento(id)
+                        }else{
+                            toast.error("O evento já ocorreu, portanto não pode mais ser editado!");
+                        }
                     }}>
-                    </i>
+
+                    </i>    
                     <EditarEvento
                     isOpen={popupCriarOpen}
                     onClose={() => setPopupCriarOpen(false)}
