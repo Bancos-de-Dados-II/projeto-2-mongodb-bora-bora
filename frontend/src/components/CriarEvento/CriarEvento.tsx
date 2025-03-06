@@ -155,7 +155,7 @@ const CriarEvento: React.FC<CriarEventoProps> = ({isOpen, onClose}) => {
 
             onClose();
             reset()
-            // window.location.reload()
+            window.location.reload()
               
         } catch (error:any) {
             toast.error(error.message);

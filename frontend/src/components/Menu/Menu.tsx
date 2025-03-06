@@ -81,7 +81,7 @@ const Menu: React.FC = () => {
                 />
                 ))}
 
-                <iframe style={{background: "#F1F5F4", border: "none", borderRadius:" 2px", boxShadow: "0 2px 10px 0 rgba(70, 76, 79, .2)", width: "100vw", height: "100vh"}} src="https://charts.mongodb.com/charts-project-0-glgrtul/embed/dashboards?id=67aa5644-54d0-416a-854c-aa5aa55fbe28&theme=light&autoRefresh=true&maxDataAge=3600&showTitleAndDesc=false&scalingWidth=fixed&scalingHeight=fixed"></iframe>
+                {/* <iframe style={{background: "#F1F5F4", border: "none", borderRadius:" 2px", boxShadow: "0 2px 10px 0 rgba(70, 76, 79, .2)", width: "100vw", height: "100vh"}} src="https://charts.mongodb.com/charts-project-0-glgrtul/embed/dashboards?id=67aa5644-54d0-416a-854c-aa5aa55fbe28&theme=light&autoRefresh=true&maxDataAge=3600&showTitleAndDesc=false&scalingWidth=fixed&scalingHeight=fixed"></iframe> */}
             </div>
         </div>
     );
